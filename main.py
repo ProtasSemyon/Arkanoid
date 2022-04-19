@@ -1,8 +1,6 @@
 import pygame
 import os
 import colors
-import json
-import sys
 from button import Button
 
 pygame.font.init()
@@ -16,53 +14,6 @@ MAIN_SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Arkanoid")
 
 BG = pygame.transform.scale(pygame.image.load(os.path.join("images", "background.png")), (SCREEN_WIDTH, SCREEN_HEIGHT))
-
-
-class LevelScreen:
-    def __init__(self, level_file):
-        try:
-            file = open(level_file, 'r')
-        except IOError:
-            print("Error")
-            sys.exit()
-        else:
-            with file as json_file:
-                self.levels_data = json.load(json_file)
-        self.locked_img = pygame.image.load("images/LOCK.png")
-        self.cols = 4
-        self.tile_size = (200, 200)
-        self.tiles = []
-        for record in self.levels_data:
-            if record['condition'] == 'unlock':
-                self.tiles.append(Button(self.tile_size[0], self.tile_size[1], colors.DARK_BLUE, colors.AQUA, str(record['number']), colors.WHITE))
-            else:
-                self.tiles.append(Button(self.tile_size[0], self.tile_size[1], colors.DARK_BLUE, colors.AQUA, "", colors.WHITE, self.locked_img))
-
-    def draw(self, screen):
-        for i in range(len(self.tiles)):
-            self.tiles[i].draw(screen, i % self.cols*(self.tile_size[0]+50)+100, i//self.cols*(self.tile_size[1]+50)+50)
-
-
-def select_level():
-    level_screen = LevelScreen("configs/level_state.json")
-
-    back_button = Button(150, 150, colors.DARK_BLUE, colors.AQUA, "", colors.WHITE, pygame.image.load("images/BACK_BUTTON.png"))
-    run = True
-
-    while run:
-        pygame.display.update()
-        MAIN_SCREEN.blit(BG, (0, 0))
-        level_screen.draw(MAIN_SCREEN)
-        back_button.draw(MAIN_SCREEN, 100, 800)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                quit_game()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if back_button.is_active():
-                    run = False
-                elif level_screen.is_active():
-                    start_level(level_screen.get_active())
 
 
 def main_menu():
