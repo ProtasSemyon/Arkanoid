@@ -1,3 +1,5 @@
+import sys
+
 import pygame
 import os
 import colors
