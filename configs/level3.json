@@ -1,0 +1,425 @@
+{
+    "num": 3,
+    "tiles": [
+        {
+            "pos": 0,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 1,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 2,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 3,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 4,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 5,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 6,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 7,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 8,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 9,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 10,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 11,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 12,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 13,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 14,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 15,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 16,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 17,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 18,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 19,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 20,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 21,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 22,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 23,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 24,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 25,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 26,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 27,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 28,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 29,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 30,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 31,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 32,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 33,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 34,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 35,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 36,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 37,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 38,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 39,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 40,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 41,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 42,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 43,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 44,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 45,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 46,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 47,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 48,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 49,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 50,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 51,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 52,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 53,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 54,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 55,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 56,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 57,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 58,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 59,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 60,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 61,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 62,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 63,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 64,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 65,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 66,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 67,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 68,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 69,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 70,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 71,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 72,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 73,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 74,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 75,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 76,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 77,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 78,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 79,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 80,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 81,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 82,
+            "hp": 0,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 83,
+            "hp": 0,
+            "bonus": "nothing"
+        }
+    ]
+}
