@@ -61,32 +61,45 @@ def pause_level():
                     return LevelState.RETRY
                 if exit_button.is_active():
                     return LevelState.EXIT
+    clock.tick(FPS)
 
 
-def start_level(level_file):
-    level = Level((SCREEN_WIDTH, SCREEN_HEIGHT), BG, level_file)
+class GameController:
+    def __init__(self):
+        self.run = True
 
-    run = True
+    def win_level(self, level_score):
+        self.run = False
+        print(level_score)
 
-    while run:
-        pygame.display.update()
-        level.draw(MAIN_SCREEN)
+    def lose_level(self):
+        self.run = False
+        print("you_lose")
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                quit_game()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if level.is_pause_active():
-                    state = pause_level()
-                    if state == LevelState.RETRY:
-                        level = Level((SCREEN_WIDTH, SCREEN_HEIGHT), BG, level_file)
-                    elif state == LevelState.EXIT:
-                        run = False
+    def start_level(self, level_file):
+        level = Level((SCREEN_WIDTH, SCREEN_HEIGHT), BG, level_file, self.win_level, self.lose_level)
+
+        while self.run:
+            pygame.display.update()
+            level.draw(MAIN_SCREEN)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    quit_game()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if level.is_pause_active():
+                        state = pause_level()
+                        if state == LevelState.RETRY:
+                            level = Level((SCREEN_WIDTH, SCREEN_HEIGHT), BG, level_file, self.win_level, self.lose_level)
+                        elif state == LevelState.EXIT:
+                            self.run = False
+        self.run = True
+        clock.tick(FPS)
 
 
 def select_level():
     level_screen = LevelScreen("configs/level_state.json")
-
+    game_controller = GameController()
     back_button = Button(150, 150, colors.DARK_BLUE, colors.AQUA, "", colors.WHITE, pygame.image.load("images/BACK_BUTTON.png"))
     run = True
 
@@ -103,7 +116,8 @@ def select_level():
                 if back_button.is_active():
                     run = False
                 elif level_screen.is_active():
-                    start_level(level_screen.get_active())
+                    game_controller.start_level(level_screen.get_active())
+        clock.tick(FPS)
 
 
 def main_menu():
@@ -151,3 +165,5 @@ def quit_game():
 
 if __name__ == "__main__":
     main_menu()
+    # game_controller = GameController()
+    # game_controller.start_level("configs/level1.json")
