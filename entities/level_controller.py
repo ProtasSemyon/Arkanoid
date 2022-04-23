@@ -18,13 +18,17 @@ class Tile(pygame.Rect):
         super().__init__(x_pos, y_pos, 150, 50)
         self.bonus = bonus
         self.hp = hp
+        self.active = True
 
     def draw(self, screen):
         pygame.draw.rect(screen, ((50 + self.hp * 60) * (self.hp % 3) % 256, (50 + self.hp * 60) * (self.hp % 3 + 1)
                                   % 256, (50 + self.hp * 60) * (self.hp % 3 + 2) % 256), self)
 
     def hit(self):
-        pass
+        self.hp -= 1
+        if self.hp == 0:
+            self.active = False
+            self.drop_bonus()
 
     # TODO: bonus after die
 
@@ -38,8 +42,8 @@ class Ball:
         self.screen_height = screen_height
         self.top_padding = top_padding
         # ball parameters
-        self.radius = 20
-        self.speed = 6
+        self.radius = 15
+        self.speed = 5
         self.dx, self.dy = dx, dy
         rect_side = self.radius * 2 ** 0.5
         self.rect = pygame.Rect(0, 0, rect_side, rect_side)
@@ -76,8 +80,13 @@ class Ball:
         self.rect.x += self.speed * self.dx
         self.rect.y += self.speed * self.dy
 
-        if self.rect.centerx < self.radius or self.rect.centerx > self.screen_width - self.radius:
+        if self.rect.centerx < self.radius:
             self.dx = -self.dx
+            self.rect.centerx = self.radius
+
+        if self.rect.centerx > self.screen_width - self.radius:
+            self.dx = -self.dx
+            self.rect.centerx = self.screen_width - self.radius
 
         if self.rect.centery < self.radius + self.top_padding:
             self.dy = -self.dy
@@ -86,9 +95,29 @@ class Ball:
             print("bonk")
             self.active = False
 
+    def detect_collision(self, rect):
+        if not self.collide(rect):
+            return False
+        if self.dx > 0:
+            delta_x = self.rect.right - rect.left
+        else:
+            delta_x = rect.right - self.rect.left
+        if self.dy > 0:
+            delta_y = self.rect.bottom - rect.top
+        else:
+            delta_y = rect.bottom - self.rect.top
+
+        if abs(delta_x - delta_y) < 10:
+            self.dx, self.dy = -self.dx, -self.dy
+        elif delta_x > delta_y:
+            self.dy = -self.dy
+        elif delta_y > delta_y:
+            self.dx = -self.dx
+        return True
+
 
 class Player:
-    def __init__(self, color, board_speed, screen_width, screen_height, top_padding):
+    def __init__(self, color, board_speed, screen_width, screen_height, top_padding, tiles):
         # screen settings
         self.screen_width = screen_width
         self.screen_height = screen_height
@@ -100,8 +129,12 @@ class Player:
         self.board_speed = board_speed
 
         # balls
-        self.balls = [Ball(self.board.centerx, self.board.top - 20, 1, -1, screen_width, screen_height, top_padding)]
-        self.balls.append(Ball(self.board.centerx, self.board.top - 20, -1, 1, screen_width, screen_height, top_padding))
+        self.balls = []
+        self.balls.append(Ball(self.board.centerx, self.board.top - 20, 1,
+                               -1, screen_width, screen_height, top_padding))
+        self.tiles = tiles
+        self.score = 0
+        self.active = True
 
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, self.board)
@@ -125,8 +158,14 @@ class Player:
                 ball.update()
 
         for ball in self.balls:
-            if ball.collide(self.board) and ball.get_dy() > 0:
-                ball.reflect_y()
+            ball.detect_collision(self.board)
+            for tile in self.tiles:
+                if ball.detect_collision(tile):
+                    tile.hit()
+                    self.score += 10
+
+        if len(self.balls) == 0:
+            self.active = False
 
     def __left(self):
         if self.board.left - self.board_speed > 0:
@@ -140,7 +179,7 @@ class Player:
 class Level(pygame.Surface):
     cols = 6
 
-    def __init__(self, size, bg_img, level_file, level_end_func):
+    def __init__(self, size, bg_img, level_file, win_func, lose_func):
         super().__init__(size)
         try:
             file = open(level_file, 'r')
@@ -153,13 +192,13 @@ class Level(pygame.Surface):
                 self.tiles = self.__get_tile(level_data['tiles'])
                 self.number = level_data['num']
         self.bg_img = bg_img
-        self.score = 0
         self.top_bar = pygame.Surface((size[0], 100))
         self.pause_button = Button(100, 100, colors.DARK_BLUE, colors.AQUA, "", colors.WHITE,
                                    pygame.image.load('images/PAUSE.png'))
-        self.finish_game = level_end_func
+        self.win_func = win_func
+        self.lose_func = lose_func
         self.finish = False
-        self.player = Player(colors.ORANGE, 5, *size, 100)
+        self.player = Player(colors.ORANGE, 10, *size, 100, self.tiles)
 
     def draw(self, screen):
         self.blit(pygame.transform.scale(self.bg_img, self.get_size()), (0, 0))
@@ -170,14 +209,14 @@ class Level(pygame.Surface):
         self.__update_top_bar()
         self.__update_level()
         if self.finish:
-            self.finish_game(self.score)
+            self.win_func(self.player.score)
 
     def getScore(self):
-        return self.score
+        return self.player.score
 
     def __update_top_bar(self):
-        font = pygame.font.SysFont('Algerian', 75)
-        score_text = font.render('Score: ' + str(self.score), False, colors.WHITE)
+        font = pygame.font.SysFont('Algerian', 60)
+        score_text = font.render('Score: ' + str(self.player.score), False, colors.WHITE)
         level_text = font.render('Level ' + str(self.number), False, colors.WHITE)
         self.top_bar.fill(colors.DARK_BLUE)
         self.top_bar.blit(score_text, left(self.top_bar.get_size(), score_text.get_size()))
@@ -186,15 +225,19 @@ class Level(pygame.Surface):
         self.blit(self.top_bar, (0, 0))
 
     def __update_level(self):
-        while None in self.tiles:
-            self.tiles.remove(None)
         if len(self.tiles) == 0:
             self.finish = True
         for tile in self.tiles:
-            tile.draw(self)
+            if tile.active:
+                tile.draw(self)
+            else:
+                self.tiles.remove(tile)
 
-        self.player.update()
-        self.player.draw(self)
+        if self.player.active:
+            self.player.update()
+            self.player.draw(self)
+        else:
+            self.lose_func()
 
     def is_pause_active(self):
         return self.pause_button.is_active()
