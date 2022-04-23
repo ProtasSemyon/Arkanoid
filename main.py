@@ -8,6 +8,7 @@ import colors
 from entities.button import Button
 from entities.level_controller import Level
 from entities.level_screen import LevelScreen
+from utilities import center
 
 pygame.font.init()
 pygame.init()
@@ -67,14 +68,60 @@ def pause_level():
 class GameController:
     def __init__(self):
         self.run = True
+        self.font = pygame.font.SysFont('Algerian', 75)
 
     def win_level(self, level_score):
         self.run = False
-        print(level_score)
+
+        transparent_surf = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+        transparent_surf.fill(colors.WHITE)
+        transparent_surf.set_alpha(3)
+
+        win_text_1 = self.font.render('You win!', False, colors.GREEN)
+        win_text_2 = self.font.render('Youre score is ' + str(level_score), False, colors.GREEN)
+
+        run = True
+
+        while run:
+            pygame.display.update()
+            MAIN_SCREEN.blit(transparent_surf, (0, 0))
+            text_center_1 = center((SCREEN_WIDTH, SCREEN_HEIGHT), win_text_1.get_size())
+            text_center_2 = center((SCREEN_WIDTH, SCREEN_HEIGHT), win_text_2.get_size())
+
+            MAIN_SCREEN.blit(win_text_1, (text_center_1[0], text_center_1[1] - win_text_1.get_size()[1]))
+            MAIN_SCREEN.blit(win_text_2, (text_center_2[0], text_center_2[1] + win_text_2.get_size()[1]))
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    quit_game()
+
+            key_press = pygame.key.get_pressed()
+            if key_press[pygame.K_SPACE]:
+                run = False
 
     def lose_level(self):
         self.run = False
-        print("you_lose")
+
+        transparent_surf = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+        transparent_surf.fill(colors.WHITE)
+        transparent_surf.set_alpha(3)
+
+        lose_text = self.font.render("You lose!" + str(), False, colors.RED)
+
+        run = True
+
+        while run:
+            pygame.display.update()
+            MAIN_SCREEN.blit(transparent_surf, (0, 0))
+            MAIN_SCREEN.blit(lose_text, center((SCREEN_WIDTH, SCREEN_HEIGHT), lose_text.get_size()))
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    quit_game()
+
+            key_press = pygame.key.get_pressed()
+            if key_press[pygame.K_SPACE]:
+                run = False
 
     def start_level(self, level_file):
         level = Level((SCREEN_WIDTH, SCREEN_HEIGHT), BG, level_file, self.win_level, self.lose_level)
@@ -164,6 +211,6 @@ def quit_game():
 
 
 if __name__ == "__main__":
-    main_menu()
-    # game_controller = GameController()
-    # game_controller.start_level("configs/level1.json")
+    #main_menu()
+    game_controller = GameController()
+    game_controller.start_level("configs/level1.json")

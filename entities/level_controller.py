@@ -9,8 +9,8 @@ from utilities import *
 
 
 class Bonus:
-    def __init__(self, name):
-        self.name = name
+    def __init__(self):
+        pass
 
 
 class Tile(pygame.Rect):
@@ -246,5 +246,8 @@ class Level(pygame.Surface):
         tile_list = []
         for tile in tile_data:
             tile_list.append(Tile(50 + tile['pos'] % self.cols * 200, 150 + tile['pos'] // self.cols * 100,
-                                  tile['hp'], Bonus(tile['bonus'])))
+                                  tile['hp'], Bonus()))
         return tile_list
+
+    def __create_bonus(self, bonus_name: str) -> Bonus:
+        pass
