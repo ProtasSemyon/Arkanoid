@@ -9,14 +9,35 @@ from utilities import *
 
 
 class Bonus:
-    def __init__(self):
-        pass
+    def __init__(self, pos):
+        self.img = None
+        self.active = False
+        self.drop_speed = 0
+        self.pos = pos
+        self.pos_x = pos[0]
+        self.pos_y = pos[1]
+
+    def draw(self, screen):
+        screen.blit(self.img, (self.pos_x, self.pos_y))
+
+    def update(self):
+        self.pos_y += self.drop_speed
+
+    def activate(self):
+        self.active = True
+
+
+class IncreaseBoard(Bonus):
+    def __init__(self, pos):
+        super().__init__(pos)
+        self.img = pygame.transform.scale(pygame.image.load('images/increaseboard.png'), (100, 100))
+        self.drop_speed = 3
 
 
 class Tile(pygame.Rect):
-    def __init__(self, x_pos, y_pos, hp, bonus: Bonus):
+    def __init__(self, x_pos, y_pos, hp):
         super().__init__(x_pos, y_pos, 150, 50)
-        self.bonus = bonus
+        self.bonus = None
         self.hp = hp
         self.active = True
 
@@ -31,9 +52,12 @@ class Tile(pygame.Rect):
             self.drop_bonus()
 
     # TODO: bonus after die
+    def add_bonus(self, bonus: Bonus):
+        self.bonus = bonus
 
     def drop_bonus(self):
-        pass
+        if self.bonus is not None:
+            self.bonus.activate()
 
 
 class Ball:
@@ -90,6 +114,7 @@ class Ball:
 
         if self.rect.centery < self.radius + self.top_padding:
             self.dy = -self.dy
+            self.rect.centery = self.radius + self.top_padding
 
         if self.rect.centery > self.screen_height:
             print("bonk")
@@ -175,6 +200,9 @@ class Player:
         if self.board.right + self.board_speed < 1250:
             self.board.right += self.board_speed
 
+    def increase_board(self, ds):
+        self.board.w += ds
+
 
 class Level(pygame.Surface):
     cols = 6
@@ -189,6 +217,7 @@ class Level(pygame.Surface):
         else:
             with file as json_file:
                 level_data = json.load(json_file)
+                self.bonus_list = []
                 self.tiles = self.__get_tile(level_data['tiles'])
                 self.number = level_data['num']
         self.bg_img = bg_img
@@ -239,6 +268,11 @@ class Level(pygame.Surface):
         else:
             self.lose_func()
 
+        for bonus in self.bonus_list:
+            if bonus.active:
+                bonus.update()
+                bonus.draw(self)
+
     def is_pause_active(self):
         return self.pause_button.is_active()
 
@@ -246,8 +280,15 @@ class Level(pygame.Surface):
         tile_list = []
         for tile in tile_data:
             tile_list.append(Tile(50 + tile['pos'] % self.cols * 200, 150 + tile['pos'] // self.cols * 100,
-                                  tile['hp'], Bonus()))
+                                  tile['hp']))
+            tile_bonus = self.__create_bonus(tile['bonus'], tile_list[-1].center)
+            tile_list[-1].add_bonus(tile_bonus)
+            self.bonus_list.append(tile_bonus)
         return tile_list
 
-    def __create_bonus(self, bonus_name: str) -> Bonus:
-        pass
+    @staticmethod
+    def __create_bonus(bonus_name: str, pos) -> Bonus:
+        new_bonus = None
+        if bonus_name == 'increaseboard':
+            new_bonus = IncreaseBoard(pos)
+        return new_bonus
