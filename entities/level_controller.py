@@ -15,6 +15,7 @@ class Bonus:
         self.active = False
         self.drop_speed = 0
         self.pos = pos
+        self.size = (50, 50)
         self.pos_x = pos[0]
         self.pos_y = pos[1]
 
@@ -23,15 +24,22 @@ class Bonus:
 
     def update(self):
         self.pos_y += self.drop_speed
+        self.pos = (self.pos_x, self.pos_y)
 
     def activate(self):
         self.active = True
+
+    def get_pos(self):
+        return self.pos
+
+    def get_size(self):
+        return self.size
 
 
 class IncreaseBoard(Bonus):
     def __init__(self, pos):
         super().__init__(pos)
-        self.img = pygame.transform.scale(pygame.image.load('images/increaseboard.png'), (100, 100))
+        self.img = pygame.transform.scale(pygame.image.load('images/increaseboard.png'), self.size)
         self.drop_speed = 3
 
 
@@ -52,7 +60,6 @@ class Tile(pygame.Rect):
             self.active = False
             self.drop_bonus()
 
-    # TODO: bonus after die
     def add_bonus(self, bonus: Bonus):
         self.bonus = bonus
 
@@ -71,15 +78,19 @@ class Ball:
         self.speed = 5
         self.angle = angle
         self.dx, self.dy = self.__get_direction()
-        rect_side = self.radius * 2 ** 0.5
+        rect_side = self.radius * 2
         self.rect = pygame.Rect(0, 0, rect_side, rect_side)
         self.rect.center = (x_pos, y_pos)
         self.active = True
 
     def change_radius(self, dr):
         self.radius += dr
-        rect_side = self.radius * 2 ** 0.5
+        rect_side = self.radius * 2
         self.rect = pygame.Rect(self.rect.left, self.rect.top, rect_side, rect_side)
+
+    def change_angle(self, da):
+        self.angle += da
+        self.dx, self.dy = self.__get_direction()
 
     def change_speed(self, ds):
         self.speed += ds
@@ -121,7 +132,6 @@ class Ball:
             self.rect.centery = self.radius + self.top_padding
 
         if self.rect.centery > self.screen_height:
-            print("bonk")
             self.active = False
 
     def detect_collision(self, rect):
@@ -136,14 +146,13 @@ class Ball:
         else:
             delta_y = rect.bottom - self.rect.top
 
-        if abs(delta_x - delta_y) < 5:
+        if abs(delta_x - delta_y) < 10:
             self.reflect_y()
             self.reflect_x()
         elif delta_x > delta_y:
             self.reflect_y()
-        elif delta_y > delta_y:
+        elif delta_y > delta_x:
             self.reflect_x()
-        self.update()
         return True
 
     def __get_direction(self):
@@ -161,10 +170,11 @@ class Player:
         self.board = pygame.Rect(500, 950, 250, 10)
         self.color = color
         self.board_speed = board_speed
+        self.board_angle = math.pi / 6
+        self.mirror_size = self.board.width * 0.4
 
         # balls
-        self.balls = []
-        self.balls.append(Ball(self.board.centerx, self.board.top - 20, math.pi/4, screen_width, screen_height, top_padding))
+        self.balls = [Ball(self.board.centerx, self.board.top - 20, math.pi / 4, screen_width, screen_height, top_padding)]
         self.tiles = tiles
         self.score = 0
         self.active = True
@@ -187,6 +197,10 @@ class Player:
         for ball in self.balls:
             if ball.collide(self.board) and ball.get_dy() > 0:
                 ball.reflect_y()
+                if ball.rect.centerx > self.board.centerx + self.mirror_size / 2:
+                    ball.change_angle(-self.board_angle)
+                elif ball.rect.centerx < self.board.centerx - self.mirror_size / 2:
+                    ball.change_angle(self.board_angle)
             for tile in self.tiles:
                 if ball.detect_collision(tile):
                     tile.hit()
@@ -210,7 +224,16 @@ class Player:
             self.board.right += self.board_speed
 
     def __change_board_size(self, ds):
-        self.board.w += ds
+        self.board.width += ds
+        self.board.width = min(self.board.width, 320)
+        self.mirror_size = self.board.width * 0.6
+
+    def collide(self, rect):
+        return self.board.colliderect(rect)
+
+    def call_bonus(self, bonus):
+        if type(bonus) is IncreaseBoard:
+            self.__change_board_size(30)
 
 
 class Level(pygame.Surface):
@@ -280,9 +303,13 @@ class Level(pygame.Surface):
 
     def __update_bonus(self):
         for bonus in self.bonus_list:
-            if bonus is not None and bonus.active:
+            if bonus.active:
                 bonus.update()
                 bonus.draw(self)
+        for bonus in self.bonus_list:
+            if bonus.active and self.player.collide(pygame.Rect(bonus.get_pos(), bonus.get_size())):
+                self.player.call_bonus(bonus)
+                self.bonus_list.remove(bonus)
 
     def is_pause_active(self):
         return self.pause_button.is_active()
@@ -294,12 +321,14 @@ class Level(pygame.Surface):
                                   tile['hp']))
             tile_bonus = self.__create_bonus(tile['bonus'], tile_list[-1].center)
             tile_list[-1].add_bonus(tile_bonus)
-            self.bonus_list.append(tile_bonus)
+            if tile_bonus is not None:
+                self.bonus_list.append(tile_bonus)
         return tile_list
 
     @staticmethod
     def __create_bonus(bonus_name: str, pos) -> Bonus:
         new_bonus = None
-        if bonus_name == 'increaseboard':
+        if bonus_name == 'increase_board':
             new_bonus = IncreaseBoard(pos)
         return new_bonus
+
