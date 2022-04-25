@@ -39,8 +39,29 @@ class Bonus:
 class IncreaseBoard(Bonus):
     def __init__(self, pos):
         super().__init__(pos)
-        self.img = pygame.transform.scale(pygame.image.load('images/increaseboard.png'), self.size)
+        self.img = pygame.transform.scale(pygame.image.load('images/increase_board.png'), self.size)
         self.drop_speed = 3
+
+
+class BallFast(Bonus):
+    def __init__(self, pos):
+        super().__init__(pos)
+        self.img = pygame.transform.scale(pygame.image.load('images/ball_fast.png'), self.size)
+        self.drop_speed = 2
+
+
+class BallSlow(Bonus):
+    def __init__(self, pos):
+        super().__init__(pos)
+        self.img = pygame.transform.scale(pygame.image.load('images/ball_slow.png'), self.size)
+        self.drop_speed = 3
+
+
+class TripleBall(Bonus):
+    def __init__(self, pos):
+        super().__init__(pos)
+        self.img = pygame.transform.scale(pygame.image.load('images/triple_ball.png'), self.size)
+        self.drop_speed = 2
 
 
 class Tile(pygame.Rect):
@@ -69,13 +90,13 @@ class Tile(pygame.Rect):
 
 
 class Ball:
-    def __init__(self, x_pos, y_pos, angle, screen_width, screen_height, top_padding):
+    def __init__(self, x_pos, y_pos, angle, speed, radius, screen_width, screen_height, top_padding):
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.top_padding = top_padding
         # ball parameters
-        self.radius = 15
-        self.speed = 5
+        self.radius = radius
+        self.speed = speed
         self.angle = angle
         self.dx, self.dy = self.__get_direction()
         rect_side = self.radius * 2
@@ -85,6 +106,7 @@ class Ball:
 
     def change_radius(self, dr):
         self.radius += dr
+        self.radius = min(self.radius, 25)
         rect_side = self.radius * 2
         self.rect = pygame.Rect(self.rect.left, self.rect.top, rect_side, rect_side)
 
@@ -94,6 +116,8 @@ class Ball:
 
     def change_speed(self, ds):
         self.speed += ds
+        self.speed = min(9, self.speed)
+        self.speed = max(2, self.speed)
 
     def collide(self, rect):
         return self.rect.colliderect(rect)
@@ -158,6 +182,18 @@ class Ball:
     def __get_direction(self):
         return math.cos(self.angle), -math.sin(self.angle)
 
+    def get_angle(self):
+        return self.angle
+
+    def get_radius(self):
+        return self.radius
+
+    def get_speed(self):
+        return self.speed
+
+    def get_pos(self):
+        return self.rect.center
+
 
 class Player:
     def __init__(self, color, board_speed, screen_width, screen_height, top_padding, tiles):
@@ -174,7 +210,8 @@ class Player:
         self.mirror_size = self.board.width * 0.4
 
         # balls
-        self.balls = [Ball(self.board.centerx, self.board.top - 20, math.pi / 4, screen_width, screen_height, top_padding)]
+        self.balls = [
+            Ball(self.board.centerx, self.board.top - 20, math.pi / 4, 5, 15, screen_width, screen_height, top_padding)]
         self.tiles = tiles
         self.score = 0
         self.active = True
@@ -220,7 +257,7 @@ class Player:
             self.board.left -= self.board_speed
 
     def __right(self):
-        if self.board.right + self.board_speed < 1250:
+        if self.board.right + self.board_speed < self.screen_width:
             self.board.right += self.board_speed
 
     def __change_board_size(self, ds):
@@ -234,6 +271,25 @@ class Player:
     def call_bonus(self, bonus):
         if type(bonus) is IncreaseBoard:
             self.__change_board_size(30)
+        elif type(bonus) is BallFast:
+            for ball in self.balls:
+                ball.change_speed(1)
+        elif type(bonus) is BallSlow:
+            for ball in self.balls:
+                ball.change_speed(-1)
+        elif type(bonus) is TripleBall:
+            self.__triple_balls()
+
+    def __triple_balls(self):
+        new_balls = []
+        for ball in self.balls:
+            new_balls.append(Ball(*ball.get_pos(), ball.get_angle() + math.pi / 3, ball.get_speed(), ball.get_radius(),
+                                  self.screen_width, self.screen_height, self.top_padding))
+            new_balls.append(Ball(*ball.get_pos(), ball.get_angle() - math.pi / 3, ball.get_speed(), ball.get_radius(),
+                                  self.screen_width, self.screen_height, self.top_padding))
+            new_balls.append(Ball(*ball.get_pos(), -ball.get_angle(), ball.get_speed(), ball.get_radius(),
+                                  self.screen_width, self.screen_height, self.top_padding))
+        self.balls = new_balls
 
 
 class Level(pygame.Surface):
@@ -255,7 +311,7 @@ class Level(pygame.Surface):
         self.bg_img = bg_img
         self.top_bar = pygame.Surface((size[0], 100))
         self.pause_button = Button(100, 100, colors.DARK_BLUE, colors.AQUA, "", colors.WHITE,
-                                   pygame.image.load('images/PAUSE.png'))
+                                   pygame.image.load('images/pause.png'))
         self.win_func = win_func
         self.lose_func = lose_func
         self.finish = False
@@ -330,5 +386,10 @@ class Level(pygame.Surface):
         new_bonus = None
         if bonus_name == 'increase_board':
             new_bonus = IncreaseBoard(pos)
+        elif bonus_name == 'ball_fast':
+            new_bonus = BallFast(pos)
+        elif bonus_name == 'ball_slow':
+            new_bonus = BallSlow(pos)
+        elif bonus_name == 'triple_ball':
+            new_bonus = TripleBall(pos)
         return new_bonus
-
