@@ -64,6 +64,13 @@ class TripleBall(Bonus):
         self.drop_speed = 2
 
 
+class DecreaseBoard(Bonus):
+    def __init__(self, pos):
+        super().__init__(pos)
+        self.img = pygame.transform.scale(pygame.image.load('images/decrease_board.png'), self.size)
+        self.drop_speed = 4
+
+
 class Tile(pygame.Rect):
     def __init__(self, x_pos, y_pos, hp):
         super().__init__(x_pos, y_pos, 80, 40)
@@ -263,6 +270,7 @@ class Player:
     def __change_board_size(self, ds):
         self.board.width += ds
         self.board.width = min(self.board.width, 320)
+        self.board.width = max(self.board.width, 200)
         self.mirror_size = self.board.width * 0.6
 
     def collide(self, rect):
@@ -279,6 +287,8 @@ class Player:
                 ball.change_speed(-1)
         elif type(bonus) is TripleBall:
             self.__triple_balls()
+        elif type(bonus) is DecreaseBoard:
+            self.__change_board_size(-30)
 
     def __triple_balls(self):
         new_balls = []
@@ -327,7 +337,7 @@ class Level(pygame.Surface):
         self.__update_level()
         self.__update_bonus()
         if self.finish:
-            self.win_func(self.player.score)
+            self.win_func(self.player.score, self.number)
 
     def getScore(self):
         return self.player.score
@@ -392,4 +402,6 @@ class Level(pygame.Surface):
             new_bonus = BallSlow(pos)
         elif bonus_name == 'triple_ball':
             new_bonus = TripleBall(pos)
+        elif bonus_name == 'decrease_board':
+            new_bonus = DecreaseBoard(pos)
         return new_bonus
