@@ -66,15 +66,18 @@ def pause_level():
 
 
 class GameController:
-    def __init__(self):
+    def __init__(self, unlock_func):
         self.run = True
         self.font = pygame.font.SysFont('Algerian', 75)
+        self.clock = clock
+        self.unlock = unlock_func
 
-    def win_level(self, level_score):
+    def win_level(self, level_score, current_level):
         self.run = False
+        self.unlock(current_level + 1)
 
         transparent_surf = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
-        transparent_surf.fill(colors.WHITE)
+        transparent_surf.fill(colors.DARK_BLUE)
         transparent_surf.set_alpha(3)
 
         win_text_1 = self.font.render('You win!', False, colors.GREEN)
@@ -103,7 +106,7 @@ class GameController:
         self.run = False
 
         transparent_surf = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
-        transparent_surf.fill(colors.WHITE)
+        transparent_surf.fill(colors.DARK_BLUE)
         transparent_surf.set_alpha(3)
 
         lose_text = self.font.render("You lose!" + str(), False, colors.RED)
@@ -146,8 +149,9 @@ class GameController:
 
 def select_level():
     level_screen = LevelScreen("configs/level_state.json")
-    game_controller = GameController()
-    back_button = Button(150, 150, colors.DARK_BLUE, colors.AQUA, "", colors.WHITE, pygame.image.load("images/BACK_BUTTON.png"))
+    game_controller = GameController(level_screen.unlock)
+    back_button = Button(150, 150, colors.DARK_BLUE, colors.AQUA, "", colors.WHITE, pygame.image.load(
+        "images/back_button.png"))
     run = True
 
     while run:
@@ -164,6 +168,7 @@ def select_level():
                     run = False
                 elif level_screen.is_active():
                     game_controller.start_level(level_screen.get_active())
+
         clock.tick(FPS)
 
 
@@ -175,8 +180,10 @@ def main_menu():
 
     play_button = Button(550, 150, colors.DARK_BLUE, colors.AQUA, "PLAY", colors.WHITE)
     leaderboard_button = Button(550, 150, colors.DARK_BLUE, colors.AQUA, "LEADERBOARD", colors.WHITE)
-    about_button = Button(150, 150, colors.DARK_BLUE, colors.AQUA, "", colors.WHITE, pygame.image.load("images/ABOUT_BUTTON.png"))
-    quit_button = Button(150, 150, colors.DARK_BLUE, colors.AQUA, "", colors.WHITE, pygame.image.load("images/QUIT_BUTTON.png"))
+    about_button = Button(150, 150, colors.DARK_BLUE, colors.AQUA, "", colors.WHITE, pygame.image.load(
+        "images/about_button.png"))
+    quit_button = Button(150, 150, colors.DARK_BLUE, colors.AQUA, "", colors.WHITE, pygame.image.load(
+        "images/quit_button.png"))
 
     while run:
         MAIN_SCREEN.blit(BG, (0, 0))
@@ -211,6 +218,4 @@ def quit_game():
 
 
 if __name__ == "__main__":
-    #main_menu()
-    game_controller = GameController()
-    game_controller.start_level("configs/level1.json")
+    main_menu()
