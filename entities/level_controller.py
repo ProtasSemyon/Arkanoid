@@ -77,6 +77,7 @@ class Tile(pygame.Rect):
         self.bonus = None
         self.hp = hp
         self.active = True
+        self.dead_sound = pygame.mixer.Sound("sounds/hit.wav")
 
     def draw(self, screen):
         pygame.draw.rect(screen, ((50 + self.hp * 60) * (self.hp % 3) % 256, (50 + self.hp * 60) * (self.hp % 3 + 1)
@@ -86,6 +87,7 @@ class Tile(pygame.Rect):
         self.hp -= 1
         if self.hp == 0:
             self.active = False
+            self.dead_sound.play()
             self.drop_bonus()
 
     def add_bonus(self, bonus: Bonus):
@@ -110,6 +112,7 @@ class Ball:
         self.rect = pygame.Rect(0, 0, rect_side, rect_side)
         self.rect.center = (x_pos, y_pos)
         self.active = True
+        self.bonk_sound = pygame.mixer.Sound("sounds/bonk.mp3")
 
     def change_radius(self, dr):
         self.radius += dr
@@ -168,6 +171,7 @@ class Ball:
     def detect_collision(self, rect):
         if not self.collide(rect):
             return False
+        self.bonk_sound.play()
         if self.dx > 0:
             delta_x = self.rect.right - rect.left
         else:
