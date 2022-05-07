@@ -2,7 +2,9 @@ import enum
 import sys
 
 import pygame
+import pygame_menu
 import os
+import json
 import colors
 
 from entities.button import Button
@@ -14,19 +16,61 @@ pygame.font.init()
 pygame.init()
 
 SCREEN_WIDTH, SCREEN_HEIGHT = 1250, 1000
-FPS = 60
+FPS = 120
 clock = pygame.time.Clock()
 
 MAIN_SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Arkanoid")
 
 BG = pygame.transform.scale(pygame.image.load(os.path.join("images", "background.png")), (SCREEN_WIDTH, SCREEN_HEIGHT))
+leaderboard_file = 'configs/leaderboard.json'
+pygame.mixer.init()
+pygame.mixer.music.load("sounds/mainOST.mp3")
 
 
 class LevelState(enum.Enum):
     PLAY = 0
     RETRY = 1
     EXIT = 2
+
+
+def leaderboard():
+    try:
+        file = open(leaderboard_file, 'r')
+    except IOError:
+        print('Error')
+        sys.exit()
+    else:
+        with file as json_file:
+            lead_info = json.load(json_file)
+    lead_surf = pygame.Surface((400, 75*(len(lead_info) % 11)))
+    lead_surf.fill(colors.DARK_BLUE)
+    font = pygame.font.SysFont("Arial", 50)
+
+    for i, lead in enumerate(lead_info):
+        text = font.render(lead["name"] + "  " + str(lead["score"]), False, colors.WHITE)
+        position = center(lead_surf.get_size(), text.get_size())
+        position = (position[0], 10 + i*75)
+        lead_surf.blit(text, position)
+
+    return_button = Button(250, 100, colors.DARK_BLUE, colors.AQUA, "Exit", colors.WHITE)
+    run = True
+
+    while run:
+        pygame.display.update()
+
+        MAIN_SCREEN.blit(BG, (0, 0))
+        MAIN_SCREEN.blit(lead_surf, (425, 100))
+
+        return_button.draw(MAIN_SCREEN, 500, 800)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quit_game()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if return_button.is_active():
+                    run = False
+
+        clock.tick(FPS)
 
 
 def pause_level():
@@ -71,6 +115,18 @@ class GameController:
         self.font = pygame.font.SysFont('Algerian', 75)
         self.clock = clock
         self.unlock = unlock_func
+        self.name = ""
+        try:
+            file = open(leaderboard_file, 'r')
+        except IOError:
+            print('Error')
+            sys.exit()
+        else:
+            with file as json_file:
+                self.score_list = json.load(json_file)
+
+    def text_input(self, name):
+        self.name = name
 
     def win_level(self, level_score, current_level):
         self.run = False
@@ -101,6 +157,38 @@ class GameController:
             key_press = pygame.key.get_pressed()
             if key_press[pygame.K_SPACE]:
                 run = False
+        self.add_record(level_score)
+
+    def add_record(self, score):
+        menu = pygame_menu.Menu('Enter your name', 400, 120,
+                                theme=pygame_menu.themes.THEME_DARK,
+                                position=(50, 98))
+        menu.add.text_input(title="", onchange=self.text_input)
+
+        run = True
+
+        while run:
+            MAIN_SCREEN.blit(BG, (0,0))
+
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    quit_game()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        print(self.name)
+                        if len(self.name) > 2:
+                            self.score_list.append({"name": self.name, "score": score})
+                            run = False
+
+            if menu.is_enabled():
+                menu.update(events)
+                menu.draw(MAIN_SCREEN)
+
+            pygame.display.update()
+        with open(leaderboard_file, 'w') as load_file:
+            json.dump(self.score_list, load_file, indent=3)
+
 
     def lose_level(self):
         self.run = False
@@ -127,6 +215,7 @@ class GameController:
                 run = False
 
     def start_level(self, level_file):
+        pygame.mixer.music.play()
         level = Level((SCREEN_WIDTH, SCREEN_HEIGHT), BG, level_file, self.win_level, self.lose_level)
 
         while self.run:
@@ -138,13 +227,19 @@ class GameController:
                     quit_game()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if level.is_pause_active():
+                        pygame.mixer.music.pause()
                         state = pause_level()
                         if state == LevelState.RETRY:
                             level = Level((SCREEN_WIDTH, SCREEN_HEIGHT), BG, level_file, self.win_level, self.lose_level)
+                            pygame.mixer.music.play()
+                        elif state == LevelState.PLAY:
+                            pygame.mixer.music.unpause()
                         elif state == LevelState.EXIT:
                             self.run = False
+            clock.tick(FPS)
+
+        pygame.mixer.music.pause()
         self.run = True
-        clock.tick(FPS)
 
 
 def select_level():
@@ -203,7 +298,7 @@ def main_menu():
                 if play_button.is_active():
                     select_level()
                 if leaderboard_button.is_active():
-                    pass
+                    leaderboard()
                 if about_button.is_active():
                     pass
                 if quit_button.is_active():
