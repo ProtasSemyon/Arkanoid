@@ -1,0 +1,62 @@
+[
+  {
+    "number": 1,
+    "condition": "unlock",
+    "level_config": "configs/level1.json"
+  },
+  {
+    "number": 2,
+    "condition": "unlock",
+    "level_config": "configs/level2.json"
+  },
+  {
+    "number": 3,
+    "condition": "lock",
+    "level_config": "configs/level3.json"
+ },
+  {
+    "number": 4,
+    "condition": "lock",
+    "level_config": "configs/level4.json"
+  },
+  {
+    "number": 5,
+    "condition": "lock",
+    "level_config": "configs/level5.json"
+  },
+  {
+    "number": 6,
+    "condition": "lock",
+    "level_config": "configs/level6.json"
+  },
+  {
+    "number": 7,
+    "condition": "lock",
+    "level_config": "configs/level7.json"
+  },
+  {
+    "number": 8,
+    "condition": "lock",
+    "level_config": "configs/level8.json"
+  },
+  {
+    "number": 9,
+    "condition": "lock",
+    "level_config": "configs/level9.json"
+  },
+  {
+    "number": 10,
+    "condition": "lock",
+    "level_config": "configs/level10.json"
+  },
+  {
+    "number": 11,
+    "condition": "lock",
+    "level_config": "configs/level11.json"
+  },
+  {
+    "number": 12,
+    "condition": "lock",
+    "level_config": "configs/level12.json"
+  }
+]

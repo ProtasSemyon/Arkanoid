@@ -1,0 +1,275 @@
+{
+    "num": 2,
+    "tiles": [
+        {
+            "pos": 0,
+            "hp": 4,
+            "bonus": "decrease_board"
+        },
+        {
+            "pos": 1,
+            "hp": 2,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 2,
+            "hp": 2,
+            "bonus": "ball_slow"
+        },
+        {
+            "pos": 3,
+            "hp": 3,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 4,
+            "hp": 3,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 5,
+            "hp": 3,
+            "bonus": "triple_ball"
+        },
+        {
+            "pos": 6,
+            "hp": 3,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 7,
+            "hp": 3,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 8,
+            "hp": 3,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 9,
+            "hp": 2,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 10,
+            "hp": 2,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 11,
+            "hp": 4,
+            "bonus": "increase_board"
+        },
+        {
+            "pos": 12,
+            "hp": 4,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 13,
+            "hp": 4,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 14,
+            "hp": 2,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 15,
+            "hp": 2,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 16,
+            "hp": 2,
+            "bonus": "ball_fast"
+        },
+        {
+            "pos": 17,
+            "hp": 3,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 18,
+            "hp": 3,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 19,
+            "hp": 2,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 20,
+            "hp": 2,
+            "bonus": "increase_board"
+        },
+        {
+            "pos": 21,
+            "hp": 2,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 22,
+            "hp": 4,
+            "bonus": "ball_fast"
+        },
+        {
+            "pos": 23,
+            "hp": 4,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 25,
+            "hp": 4,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 26,
+            "hp": 4,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 27,
+            "hp": 1,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 28,
+            "hp": 2,
+            "bonus": "ball_fast"
+        },
+        {
+            "pos": 29,
+            "hp": 2,
+            "bonus": "decrease_board"
+        },
+        {
+            "pos": 30,
+            "hp": 2,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 31,
+            "hp": 2,
+            "bonus": "triple_ball"
+        },
+        {
+            "pos": 32,
+            "hp": 1,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 33,
+            "hp": 4,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 34,
+            "hp": 4,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 38,
+            "hp": 4,
+            "bonus": "ball_fast"
+        },
+        {
+            "pos": 39,
+            "hp": 4,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 40,
+            "hp": 1,
+            "bonus": "ball_slow"
+        },
+        {
+            "pos": 41,
+            "hp": 2,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 42,
+            "hp": 2,
+            "bonus": "ball_fast"
+        },
+        {
+            "pos": 43,
+            "hp": 1,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 44,
+            "hp": 4,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 45,
+            "hp": 4,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 51,
+            "hp": 4,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 52,
+            "hp": 4,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 53,
+            "hp": 1,
+            "bonus": "increase_board"
+        },
+        {
+            "pos": 54,
+            "hp": 1,
+            "bonus": "triple_ball"
+        },
+        {
+            "pos": 55,
+            "hp": 4,
+            "bonus": "ball_slow"
+        },
+        {
+            "pos": 56,
+            "hp": 4,
+            "bonus": "ball_fast"
+        },
+        {
+            "pos": 64,
+            "hp": 4,
+            "bonus": "ball_fast"
+        },
+        {
+            "pos": 65,
+            "hp": 4,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 66,
+            "hp": 4,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 67,
+            "hp": 4,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 77,
+            "hp": 4,
+            "bonus": "nothing"
+        },
+        {
+            "pos": 78,
+            "hp": 4,
+            "bonus": "triple_ball"
+        }
+    ]
+}
